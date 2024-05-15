@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 
 abstract class TetrisPageInterface {
   void handleBlockFreezed();
+
   void handlePeerCommand(String command);
 }
 
@@ -36,11 +37,11 @@ class KeyboardGameController implements GameController {
   final _controller = StreamController<GameCommand>.broadcast();
 
   void onKeyEvent(
-    RawKeyEvent event,
+    KeyEvent event,
     Set<LogicalKeyboardKey> keysPressed,
   ) {
-    final isKeyUp = event is RawKeyUpEvent;
-    if (event.repeat || !isKeyUp) {
+    final isKeyUp = event.logicalKey == LogicalKeyboardKey.arrowUp;
+    if (event.synthesized || !isKeyUp) {
       return;
     }
     if (event.logicalKey == LogicalKeyboardKey.escape) {
@@ -74,12 +75,10 @@ class KeyboardGameController implements GameController {
     } else if (event.logicalKey == LogicalKeyboardKey.keyA) {
       _controller.sink.add(GameCommand.debug);
     }
-    
   }
 
   @override
-  Stream<GameCommand> get commandStream =>
-      _controller.stream;
+  Stream<GameCommand> get commandStream => _controller.stream;
 
-  // TODO(as): close streamController
+// TODO(as): close streamController
 }

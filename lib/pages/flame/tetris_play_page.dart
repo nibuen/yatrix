@@ -4,8 +4,8 @@ import 'dart:math';
 
 import 'package:bot_toast/bot_toast.dart';
 import 'package:collection/collection.dart';
+import 'package:flame/camera.dart';
 import 'package:flame/components.dart';
-import 'package:flame/experimental.dart';
 import 'package:flame/game.dart' hide Viewport;
 import 'package:flutter/painting.dart';
 import 'package:sprintf/sprintf.dart';
@@ -26,6 +26,7 @@ class TetrisPlayPage extends Component
   late final CameraComponent cameraComponent;
   late final Viewfinder viewfinder;
   late final Viewport viewport;
+
   Vector2 get visibleGameSize => viewfinder.visibleGameSize!;
 
   late final RouterComponent router;
@@ -45,10 +46,12 @@ class TetrisPlayPage extends Component
   LevelIndicator? _levelIndicatorPeer;
 
   TetrisBaseBlock? _currentFallingBlock;
+
   @override
   TetrisBaseBlock? get currentFallingBlock => _currentFallingBlock;
 
   double? _droppedAtY;
+
   @override
   set droppedAtY(double y) {
     game.playSoundEffect(SoundEffects.droppingBlock);
@@ -58,6 +61,7 @@ class TetrisPlayPage extends Component
   @override
   Future<void> onLoad() async {
     print('TetrisPlayPage.onLoad');
+
     addAll([
       BackButtonComponent(onTapped: onBackButton),
       PauseButtonComponent(onTapped: onPauseButton),
@@ -76,8 +80,11 @@ class TetrisPlayPage extends Component
     //debugMode = true;
     world = World();
     children.register<Quadrat>();
-    cameraComponent = CameraComponent(world: world);
+    cameraComponent = CameraComponent(
+      world: world,
+    );
     viewport = cameraComponent.viewport;
+    viewport.size = Vector2(40, 40);
     viewfinder = cameraComponent.viewfinder;
 
     await addAll([world, cameraComponent]);
@@ -89,11 +96,6 @@ class TetrisPlayPage extends Component
     world.add(Floor(size: Vector2(520, 10), position: Vector2(40, 1050)));
     world.add(Side(size: Vector2(10, 950), position: Vector2(40, 100)));
     world.add(Side(size: Vector2(10, 950), position: Vector2(550, 100)));
-    initGameControllers([
-      game.keyboardGameController!,
-      fiveButtons!,
-      threeButtons!,
-    ]);
   }
 
   void updateTwoPlayerIcon() {
@@ -111,7 +113,7 @@ class TetrisPlayPage extends Component
     print('TetrisPlayPage size: $size');
     const buttonGapX = 10.0;
     final allsvgButtons = children.query<SvgButton>();
-    allsvgButtons.forEach((button) => button.removeFromParent());
+    allsvgButtons.toList().forEach((button) => button.removeFromParent());
     _textComponent?.removeFromParent();
     _textComponent = TextBoxComponent(
       text: 'Tap button to start ->',
@@ -143,9 +145,9 @@ class TetrisPlayPage extends Component
     threeButtons?.position =
         Vector2(size.x - 2 * 35 - 2 * buttonGapX, buttonGapX);
 
-      _twoPlayerActive = SvgButton(
+    _twoPlayerActive = SvgButton(
       name: 'svg/cloud-arrow-right-outline-green.svg',
-        onTap: game.isTwoPlayerGame ? game.showPromptDialog : () {},
+      onTap: game.isTwoPlayerGame ? game.showPromptDialog : () {},
     );
     add(_twoPlayerActive!);
     _twoPlayerActive?.position = Vector2(size.x / 2, buttonGapX);
@@ -176,6 +178,12 @@ class TetrisPlayPage extends Component
         Vector2(size.x / 2 - levelSize.x - buttonGapX, buttonGapX);
     _levelIndicatorPeer?.size = levelSize;
 
+    initGameControllers([
+      game.keyboardGameController!,
+      fiveButtons!,
+      threeButtons!,
+    ]);
+
     super.onGameResize(size);
   }
 
@@ -185,7 +193,7 @@ class TetrisPlayPage extends Component
       final deltaY = (freezedAtY - _droppedAtY!) / 25;
       // ignore: division_optimization
       // the higher speed the more points
-      _dropPoints += (deltaY * game.velocity / 100.0).toInt();
+      _dropPoints += deltaY * game.velocity ~/ 100.0;
       _droppedAtY = null;
     }
     _dropPoints++;
@@ -253,12 +261,12 @@ class TetrisPlayPage extends Component
   bool vetoTwoPlayerGameStart() {
     if (game.isTwoPlayerGame) {
       if (!game.isPeerServer) {
-      BotToast.showText(
+        BotToast.showText(
           text: ' Two-Player-Mode. Wait for the Server to start the game.',
-        duration: const Duration(seconds: 3),
+          duration: const Duration(seconds: 3),
           align: const Alignment(0, -0.5),
-      );
-      return true;
+        );
+        return true;
       } else {
         BotToast.showText(
           text: ' Two-Player-Mode. Asking the peer to start.',

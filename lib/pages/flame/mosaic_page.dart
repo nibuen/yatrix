@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 import 'dart:math';
 
+import 'package:flame/camera.dart';
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/game.dart' hide Viewport;
@@ -106,7 +107,7 @@ class MosaicPage extends Component
     super.onGameResize(size);
     world?.removeFromParent();
     world = World();
-    cameraComponent = CameraComponent(world: world!);
+    cameraComponent = CameraComponent(world: world);
     viewport = cameraComponent!.viewport;
     viewfinder = cameraComponent!.viewfinder;
 

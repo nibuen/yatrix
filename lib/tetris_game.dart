@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:bot_toast/bot_toast.dart';
+import 'package:flame/events.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/game.dart' hide Viewport;
 import 'package:flame/input.dart';
@@ -47,11 +48,7 @@ enum SoundEffects {
 }
 
 class TetrisGame extends FlameGame
-    with
-        HasCollisionDetection,
-        HasDraggables,
-        HasTappableComponents,
-        KeyboardEvents {
+    with HasCollisionDetection, DragCallbacks, KeyboardEvents {
   TetrisGame({required this.widgetRef});
 
   bool isGameRunning = false;
@@ -86,9 +83,11 @@ class TetrisGame extends FlameGame
   }
 
   int get points => _points;
+
   int get rows => _rows;
 
   String _gameEndString = 'Game Over!';
+
   String get gameEndString => _gameEndString;
 
   @override
@@ -161,9 +160,9 @@ class TetrisGame extends FlameGame
 
   @override
   KeyEventResult onKeyEvent(
-    RawKeyEvent event,
-    Set<LogicalKeyboardKey> keysPressed,
-  ) {
+      KeyEvent event,
+      Set<LogicalKeyboardKey> keysPressed,
+      ) {
     keyboardGameController?.onKeyEvent(event, keysPressed);
     return super.onKeyEvent(event, keysPressed);
   }
@@ -245,12 +244,12 @@ class TetrisGame extends FlameGame
       sendMessageToPeer('@u?$_userName');
     } else if (command.startsWith('@u?')) {
       message = 'Nickname of client is: ${command.substring(3)}';
-      widgetRef.read(peerServerNotifier.notifier).setClientDetails(message);
+      //widgetRef.read(peerServerNotifier.notifier).setClientDetails(message);
       // auto respond to 'Who are You? with the nickname
       sendMessageToPeer('@u!$_userName');
     } else if (command.startsWith('@u!')) {
       message = 'Nickname of server is: ${command.substring(3)}';
-      widgetRef.read(peerClientNotifier.notifier).setServerDetails(message);
+      //widgetRef.read(peerClientNotifier.notifier).setServerDetails(message);
     } else {
       message = command;
     }
@@ -267,7 +266,7 @@ class TetrisGame extends FlameGame
   void sendMessageToPeer(String message) {
     print('sendMessageToPeer: message: ${message}');
     if (isTwoPlayerGame) {
-      widgetRef.read(peerServiceProvider).sendMessage(message);
+      //widgetRef.read(peerServiceProvider).sendMessage(message);
     }
   }
 
@@ -376,5 +375,4 @@ class TetrisGame extends FlameGame
     );
     router.pushNamed('commitDialog');
   }
-
 }

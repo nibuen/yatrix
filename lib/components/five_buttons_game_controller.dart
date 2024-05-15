@@ -8,7 +8,7 @@ import 'keyboard_game_controller.dart';
 import 'svg_button.dart';
 
 class FiveButtonsGameController extends PositionComponent
-    with Draggable
+    with DragCallbacks
     implements GameController {
   FiveButtonsGameController({
     super.position,
@@ -65,8 +65,8 @@ class FiveButtonsGameController extends PositionComponent
   Stream<GameCommand> get commandStream => _controller.stream;
 
 @override
-  bool onDragUpdate(DragUpdateInfo info) {
-    position.add(info.delta.game);
+  bool onDragUpdate(DragUpdateEvent event) {
+    position.add(event.localDelta.gg);
     return false;
   }
 

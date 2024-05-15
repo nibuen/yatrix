@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flame/components.dart';
+import 'package:flame/events.dart';
 import 'package:flame/experimental.dart';
 
 import '../helpers/game_assets.dart';

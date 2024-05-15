@@ -30,16 +30,24 @@ abstract class TetrisBaseBlock extends SpriteComponent
   Vector2 blockPosition;
 
   static Random _random = Random();
+
   Vector2 get blockSize;
+
   Anchor get blockAnchor;
+
   List<Vector2> get quadPositions;
+
   double get xOffset;
+
   double get yOffset;
+
   String get name;
+
   double? _lastDeltaX;
   double? _lastRotate;
   bool _isFreezed = false;
   World? world;
+
   // if world == null, then we are in Construction Mode
   bool get isConstructionMode => world == null;
 
@@ -151,11 +159,10 @@ abstract class TetrisBaseBlock extends SpriteComponent
     final quads = children.query<Quadrat>();
     for (final quad in quads) {
       final absolutePosition = quad.absolutePosition;
-      quad.changeParent(world!);
+      quad.parent = world;
       // print(
       //     'Helpers.rotCorrection(quad.absoluteAngle): ${Helpers.rotCorrection(quad.absoluteAngle)}');
-      quad.position =
-          absolutePosition +
+      quad.position = absolutePosition +
           RotationHelper.rotCorrection(quad.absoluteAngle) *
               (quadSize - 2 * quadPadding);
       quad.freeze();
@@ -244,16 +251,22 @@ class TetrisPlayI extends TetrisBaseBlock {
     required super.blockPosition,
     super.world,
   });
+
   @override
   Vector2 get blockSize => Vector2(4 * quadSize, quadSize);
+
   @override
   String get name => 'tet-I';
+
   @override
   Anchor get blockAnchor => const Anchor(0.125, 0.5);
+
   @override
   double get xOffset => 25.0;
+
   @override
   double get yOffset => 25.0;
+
   @override
   List<Vector2> get quadPositions => [
         Vector2(quadPadding, quadPadding),
@@ -268,14 +281,19 @@ class TetrisPlayO extends TetrisBaseBlock {
     required super.blockPosition,
     super.world,
   });
+
   @override
   Vector2 get blockSize => Vector2(2 * quadSize, 2 * quadSize);
+
   @override
   String get name => 'tet-O';
+
   @override
   Anchor get blockAnchor => Anchor.center;
+
   @override
   double get xOffset => 50.0;
+
   @override
   double get yOffset => 0.0;
 
@@ -293,16 +311,22 @@ class TetrisPlayJ extends TetrisBaseBlock {
     required super.blockPosition,
     super.world,
   });
+
   @override
   Vector2 get blockSize => Vector2(3 * quadSize, 2 * quadSize);
+
   @override
   String get name => 'tet-J';
+
   @override
   Anchor get blockAnchor => const Anchor(0.5, 0.75);
+
   @override
   double get xOffset => 75.0;
+
   @override
   double get yOffset => 25.0;
+
   @override
   List<Vector2> get quadPositions => [
         Vector2(quadPadding, quadSize + quadPadding),
@@ -320,14 +344,19 @@ class TetrisPlayL extends TetrisBaseBlock {
 
   @override
   Vector2 get blockSize => Vector2(3 * quadSize, 2 * quadSize);
+
   @override
   String get name => 'tet-L';
+
   @override
   Anchor get blockAnchor => const Anchor(0.5, 0.75);
+
   @override
   double get xOffset => 75.0;
+
   @override
   double get yOffset => 25.0;
+
   @override
   List<Vector2> get quadPositions => [
         Vector2(quadPadding, quadSize + quadPadding),
@@ -342,16 +371,22 @@ class TetrisPlayT extends TetrisBaseBlock {
     required super.blockPosition,
     super.world,
   });
+
   @override
   Vector2 get blockSize => Vector2(3 * quadSize, 2 * quadSize);
+
   @override
   String get name => 'tet-T';
+
   @override
   Anchor get blockAnchor => const Anchor(0.5, 0.75);
+
   @override
   double get xOffset => 75.0;
+
   @override
   double get yOffset => 25.0;
+
   @override
   List<Vector2> get quadPositions => [
         Vector2(quadPadding, quadSize + quadPadding),
@@ -366,16 +401,22 @@ class TetrisPlayS extends TetrisBaseBlock {
     required super.blockPosition,
     super.world,
   });
+
   @override
   Vector2 get blockSize => Vector2(3 * quadSize, 2 * quadSize);
+
   @override
   String get name => 'tet-S';
+
   @override
   Anchor get blockAnchor => const Anchor(0.5, 0.75);
+
   @override
   double get xOffset => 75.0;
+
   @override
   double get yOffset => 25.0;
+
   @override
   List<Vector2> get quadPositions => [
         Vector2(quadPadding, quadSize + quadPadding),
@@ -390,16 +431,22 @@ class TetrisPlayZ extends TetrisBaseBlock {
     required super.blockPosition,
     super.world,
   });
+
   @override
   Vector2 get blockSize => Vector2(3 * quadSize, 2 * quadSize);
+
   @override
   String get name => 'tet-Z';
+
   @override
   Anchor get blockAnchor => const Anchor(0.5, 0.75);
+
   @override
   double get xOffset => 75.0;
+
   @override
   double get yOffset => 25.0;
+
   @override
   List<Vector2> get quadPositions => [
         Vector2(quadPadding, quadPadding),
